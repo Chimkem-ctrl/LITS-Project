@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Activate Your LITS Account</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap');
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:'Plus Jakarta Sans',Arial,sans-serif;background:#0f172a;padding:40px 16px}
+    .wrapper{max-width:600px;margin:0 auto}
+    .logo-bar{text-align:center;margin-bottom:24px}
+    .logo-pill{display:inline-flex;align-items:center;gap:10px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:50px;padding:10px 22px}
+    .logo-icon{width:32px;height:32px;background:linear-gradient(135deg,#3b82f6,#1d4ed8);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;color:#fff}
+    .logo-text{font-size:14px;font-weight:700;color:#e2e8f0;letter-spacing:.5px}
+    .card{background:#1e293b;border:1px solid rgba(255,255,255,.08);border-radius:24px;overflow:hidden}
+    .hero{background:linear-gradient(135deg,#1e3a8a 0%,#1d4ed8 50%,#3b82f6 100%);padding:52px 40px 44px;text-align:center;position:relative}
+    .hero::before{content:'';position:absolute;inset:0;background-image:radial-gradient(circle at 20% 50%,rgba(255,255,255,.08) 0%,transparent 60%),radial-gradient(circle at 80% 20%,rgba(255,255,255,.06) 0%,transparent 50%)}
+    .hero-badge{display:inline-block;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);border-radius:50px;padding:6px 16px;font-size:12px;font-weight:600;color:#bfdbfe;letter-spacing:1px;text-transform:uppercase;margin-bottom:20px;position:relative}
+    .hero h1{font-size:32px;font-weight:800;color:#fff;line-height:1.2;margin-bottom:12px;position:relative}
+    .hero p{font-size:16px;color:#93c5fd;position:relative}
+    .icon-wrap{text-align:center;margin:-28px 0 0;position:relative;z-index:2}
+    .icon-circle{display:inline-flex;align-items:center;justify-content:center;width:56px;height:56px;background:#1e293b;border:4px solid #1e3a8a;border-radius:50%;font-size:22px}
+    .body{padding:36px 40px 40px}
+    .greeting{font-size:20px;font-weight:700;color:#f1f5f9;margin-bottom:16px}
+    .text{font-size:15px;color:#94a3b8;line-height:1.75;margin-bottom:20px}
+    .info-box{background:rgba(59,130,246,.08);border:1px solid rgba(59,130,246,.2);border-radius:12px;padding:16px 20px;margin-bottom:28px;display:flex;gap:12px;align-items:flex-start}
+    .info-icon{font-size:18px;margin-top:2px}
+    .info-text{font-size:14px;color:#93c5fd;line-height:1.6}
+    .cta-wrap{text-align:center;margin:0 0 28px}
+    .cta-btn{display:inline-block;background:linear-gradient(135deg,#2563eb,#1d4ed8);color:#fff!important;text-decoration:none;font-size:16px;font-weight:700;padding:16px 44px;border-radius:12px;letter-spacing:.3px;box-shadow:0 8px 24px rgba(37,99,235,.35)}
+    .divider{border:none;border-top:1px solid rgba(255,255,255,.07);margin:28px 0}
+    .fallback-label{font-size:12px;color:#64748b;margin-bottom:8px}
+    .fallback-url{font-size:12px;color:#3b82f6;word-break:break-all;background:rgba(255,255,255,.04);border-radius:8px;padding:10px 14px}
+    .expiry{display:flex;align-items:center;gap:8px;background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.2);border-radius:10px;padding:12px 16px;margin-top:24px}
+    .expiry-icon{font-size:16px}
+    .expiry-text{font-size:13px;color:#fbbf24}
+    .footer{background:#0f172a;padding:24px 40px;text-align:center;border-top:1px solid rgba(255,255,255,.06)}
+    .footer-logo{font-size:13px;font-weight:700;color:#475569;margin-bottom:6px}
+    .footer-sub{font-size:12px;color:#334155;line-height:1.6}
+    .footer-links{margin-top:12px}
+    .footer-links a{font-size:12px;color:#475569;text-decoration:none;margin:0 8px}
+  </style>
+</head>
+<body>
+<div class="wrapper">
+  <div class="logo-bar">
+    <div class="logo-pill">
+      <div class="logo-icon">L</div>
+      <span class="logo-text">LITS &mdash; Loan &amp; Installment Tracking System</span>
+    </div>
+  </div>
+  <div class="card">
+    <div class="hero">
+      <div class="hero-badge">Account Verification</div>
+      <h1>Almost there,<br/>{{ user.first_name }}! 🎉</h1>
+      <p>Confirm your email to unlock your account</p>
+    </div>
+    <div class="icon-wrap"><div class="icon-circle">✉️</div></div>
+    <div class="body">
+      <p class="greeting">Hi {{ user.first_name }} {{ user.last_name }},</p>
+      <p class="text">Welcome to <strong style="color:#f1f5f9">LITS</strong> — your centralized platform for managing loan records, installment payments, and borrower accounts. You're just one click away from getting started.</p>
+      <div class="info-box">
+        <div class="info-icon">🔐</div>
+        <div class="info-text">For your security, this activation link is unique to your account and can only be used once. Please do not share it with anyone.</div>
+      </div>
+      <div class="cta-wrap">
+        <a href="http://localhost:3000/activate/{{ url|safe }}" class="cta-btn">✅&nbsp; Activate My Account</a>
+      </div>
+      <hr class="divider"/>
+      <p class="fallback-label">Or copy and paste this URL into your browser:</p>
+      <div class="fallback-url">http://localhost:3000/activate/{{ url|safe }}</div>
+      <div class="expiry">
+        <span class="expiry-icon">⏰</span>
+        <span class="expiry-text">This link expires in <strong>24 hours</strong>. If it expires, please register again.</span>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="footer-logo">LITS &mdash; USTP Cagayan de Oro City</div>
+      <div class="footer-sub">If you did not create an account, you can safely ignore this email.<br/>&copy; 2026 University of Science and Technology of Southern Philippines</div>
+      <div class="footer-links"><a href="#">Privacy Policy</a><a href="#">Terms of Service</a><a href="#">Support</a></div>
+    </div>
+  </div>
+</div>
+</body>
+</html>
