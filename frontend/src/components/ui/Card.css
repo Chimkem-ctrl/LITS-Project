@@ -1,0 +1,37 @@
+.card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  transition: all var(--transition-base);
+  overflow: hidden;
+}
+
+.card:hover {
+  border-color: var(--primary-500);
+  box-shadow: 0 4px 20px rgba(34, 197, 94, 0.1);
+  transform: translateY(-2px);
+}
+
+.card-header {
+  padding: var(--space-6);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.card-body {
+  padding: var(--space-6);
+}
+
+.card-footer {
+  padding: var(--space-6);
+  border-top: 1px solid var(--border-color);
+  background: rgba(34, 197, 94, 0.03);
+  display: flex;
+  gap: var(--space-4);
+  justify-content: flex-end;
+}
+
+.card-title {
+  margin: 0;
+  font-size: var(--text-lg);
+  color: var(--text-primary);
+}

@@ -1,0 +1,35 @@
+.admin-container {
+  padding: var(--space-8) 0;
+}
+
+.admin-container h1 {
+  margin-bottom: var(--space-8);
+}
+
+.admin-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: var(--space-6);
+}
+
+.admin-card {
+  animation: slideInUp var(--transition-slow);
+  text-align: center;
+}
+
+.admin-card .card-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.admin-card p {
+  margin: 0;
+  color: var(--text-secondary);
+}
+
+@media (max-width: 768px) {
+  .admin-grid {
+    grid-template-columns: 1fr;
+  }
+}

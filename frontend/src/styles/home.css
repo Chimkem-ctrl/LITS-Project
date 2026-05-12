@@ -1,0 +1,115 @@
+.home-container {
+  min-height: 100vh;
+  padding: var(--space-20) var(--space-8);
+  text-align: center;
+}
+
+.home-hero {
+  margin-bottom: var(--space-24);
+  animation: slideInUp var(--transition-slow);
+}
+
+.home-title {
+  font-size: var(--text-4xl);
+  margin-bottom: var(--space-4);
+  background: linear-gradient(135deg, var(--primary-500), var(--accent-500));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.home-subtitle {
+  font-size: var(--text-2xl);
+  color: var(--text-primary);
+  margin-bottom: var(--space-4);
+}
+
+.home-description {
+  font-size: var(--text-lg);
+  color: var(--text-secondary);
+  max-width: 600px;
+  margin: 0 auto var(--space-12);
+  line-height: 1.8;
+}
+
+.home-actions {
+  display: flex;
+  gap: var(--space-6);
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.home-actions a {
+  text-decoration: none;
+}
+
+.home-features {
+  margin-top: var(--space-24);
+}
+
+.feature-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: var(--space-8);
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.feature-card {
+  text-align: left;
+  transition: all var(--transition-base);
+  position: relative;
+  overflow: hidden;
+}
+
+.feature-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--primary-500), var(--accent-500));
+}
+
+.feature-card:hover {
+  border-color: var(--primary-500);
+  transform: translateY(-4px);
+}
+
+.feature-icon {
+  font-size: 3rem;
+  margin-bottom: var(--space-4);
+}
+
+.feature-card h3 {
+  margin-bottom: var(--space-2);
+  color: var(--text-primary);
+}
+
+.feature-card p {
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+@media (max-width: 768px) {
+  .home-container {
+    padding: var(--space-12) var(--space-4);
+  }
+
+  .home-title {
+    font-size: var(--text-3xl);
+  }
+
+  .home-subtitle {
+    font-size: var(--text-xl);
+  }
+
+  .home-description {
+    font-size: var(--text-base);
+  }
+
+  .feature-grid {
+    grid-template-columns: 1fr;
+  }
+}
