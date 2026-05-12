@@ -55,6 +55,10 @@ TEMPLATES = [
     },
 ]
 
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+]
+
 WSGI_APPLICATION = 'lits.wsgi.application'
 
 DATABASE_URL = config('DATABASE_URL', default=None)
@@ -111,6 +115,8 @@ REST_FRAMEWORK = {
 
 from datetime import timedelta
 SIMPLE_JWT = {
+    'USER_ID_FIELD': 'email',
+    'USER_ID_CLAIM': 'user_id',
     'ACCESS_TOKEN_LIFETIME':  timedelta(days=1),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
     'ROTATE_REFRESH_TOKENS':  True,
@@ -118,15 +124,13 @@ SIMPLE_JWT = {
 
 DJOSER = {
     'LOGIN_FIELD': 'email',
+    'USER_ID_FIELD': 'email', # Add this line
     'USER_CREATE_PASSWORD_RETYPE': True,
-    'ACTIVATION_URL': 'activate/{uid}/{token}',
-    'SEND_ACTIVATION_EMAIL': True,
+    'SEND_ACTIVATION_EMAIL': False, # Make sure this is False
     'SERIALIZERS': {
-        'user_create':  'users.serializers.UserCreateSerializer',
+        'user_create': 'users.serializers.UserCreateSerializer',
+        'user': 'users.serializers.UserSerializer', # Use 'user' instead of 'current_user'
         'current_user': 'users.serializers.UserSerializer',
-    },
-    'EMAIL': {
-        'activation': 'users.email.CustomActivationEmail',
     },
 }
 
@@ -136,6 +140,7 @@ CORS_ALLOWED_ORIGINS = config(
     default='http://localhost:3000,http://127.0.0.1:3000'
 ).split(',')
 CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOW_ALL_ORIGINS = True
 
 EMAIL_BACKEND       = config('EMAIL_BACKEND', default='django.core.mail.backends.console.EmailBackend')
 EMAIL_HOST          = 'smtp.gmail.com'

@@ -4,6 +4,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    
 
     # JWT endpoints (used by FastAPI to verify credentials)
     path('api/v1/auth/jwt/create/',  TokenObtainPairView.as_view(), name='jwt-create'),
