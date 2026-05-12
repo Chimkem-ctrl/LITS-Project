@@ -1,6 +1,9 @@
 from pathlib import Path
 from decouple import config
 import dj_database_url
+from .compat import apply_runtime_patches
+
+apply_runtime_patches()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -70,7 +73,7 @@ else:
             'ENGINE': 'django.db.backends.postgresql',
             'NAME':     config('DB_NAME',     default='litsdb'),
             'USER':     config('DB_USER',     default='postgres'),
-            'PASSWORD': config('DB_PASSWORD', default=''),
+            'PASSWORD': config('DB_PASSWORD', default='admin'),
             'HOST':     config('DB_HOST',     default='localhost'),
             'PORT':     config('DB_PORT',     default='5432'),
         }
