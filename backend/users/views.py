@@ -17,9 +17,14 @@ class MeView(APIView):
     def patch(self, request):
         """Update profile — including uploading a new profile picture."""
         serializer = UserUpdateSerializer(
-            request.user, data=request.data, partial=True
+            request.user,
+            data=request.data,
+            partial=True,
         )
         if serializer.is_valid():
-            serializer.save()
-            return Response(UserSerializer(request.user).data)
+            try:
+                serializer.save()
+                return Response(UserSerializer(request.user).data)
+            except Exception as exc:
+                return Response({"detail": str(exc)}, status=status.HTTP_400_BAD_REQUEST)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

@@ -10,8 +10,13 @@ class UserCreateSerializer(BaseUserCreateSerializer):
         model = CustomUser
         fields = (
             "id", "email", "first_name", "last_name",
-            "password", "re_password", "role", "profile_picture",
+            "password", "re_password", "profile_picture",
         )
+
+    def create(self, validated_data):
+        # Public registration should always create borrower accounts.
+        validated_data["role"] = "borrower"
+        return super().create(validated_data)
 
 
 class UserSerializer(serializers.ModelSerializer):

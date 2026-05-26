@@ -1,5 +1,6 @@
 from rest_framework import viewsets, status
 from rest_framework.permissions import IsAuthenticated
+from users.permissions import IsOfficerOrAdmin
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from django.db.models import Sum, Count, Q
@@ -8,7 +9,7 @@ from .serializers import BorrowerSerializer, LoanSerializer, LoanListSerializer,
 
 
 class BorrowerViewSet(viewsets.ModelViewSet):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsOfficerOrAdmin]
     serializer_class = BorrowerSerializer
 
     def get_queryset(self):
@@ -26,7 +27,7 @@ class BorrowerViewSet(viewsets.ModelViewSet):
 
 
 class LoanViewSet(viewsets.ModelViewSet):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsOfficerOrAdmin]
 
     def get_serializer_class(self):
         if self.action == 'list':
@@ -46,14 +47,33 @@ class LoanViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(created_by=self.request.user)
 
-    @action(detail=False, methods=['get'])
+    @action(detail=False, methods=['get'], permission_classes=[IsAuthenticated])
     def dashboard_stats(self, request):
-        total_loans = Loan.objects.count()
-        active_loans = Loan.objects.filter(status='active').count()
-        paid_loans = Loan.objects.filter(status='paid').count()
-        total_borrowers = Borrower.objects.count()
-        total_disbursed = Loan.objects.aggregate(total=Sum('principal_amount'))['total'] or 0
-        total_collected = Payment.objects.aggregate(total=Sum('amount_paid'))['total'] or 0
+        # Allow any authenticated user to access this endpoint, but scope the
+        # returned data based on the user's role.
+        user = request.user
+
+        if getattr(user, "role", None) in {"admin", "officer"}:
+            total_loans = Loan.objects.count()
+            active_loans = Loan.objects.filter(status='active').count()
+            paid_loans = Loan.objects.filter(status='paid').count()
+            total_borrowers = Borrower.objects.count()
+            total_disbursed = Loan.objects.aggregate(total=Sum('principal_amount'))['total'] or 0
+            total_collected = Payment.objects.aggregate(total=Sum('amount_paid'))['total'] or 0
+            scope = "all"
+        else:
+            # For borrowers, return only stats for loans associated with
+            # borrower records that match the user's email.
+            borrowers = Borrower.objects.filter(email=user.email)
+            loans = Loan.objects.filter(borrower__in=borrowers)
+            total_loans = loans.count()
+            active_loans = loans.filter(status='active').count()
+            paid_loans = loans.filter(status='paid').count()
+            total_borrowers = borrowers.count()
+            total_disbursed = loans.aggregate(total=Sum('principal_amount'))['total'] or 0
+            total_collected = Payment.objects.filter(loan__in=loans).aggregate(total=Sum('amount_paid'))['total'] or 0
+            scope = "self"
+
         return Response({
             'total_loans': total_loans,
             'active_loans': active_loans,
@@ -61,11 +81,12 @@ class LoanViewSet(viewsets.ModelViewSet):
             'total_borrowers': total_borrowers,
             'total_disbursed': total_disbursed,
             'total_collected': total_collected,
+            'scope': scope,
         })
 
 
 class PaymentViewSet(viewsets.ModelViewSet):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsOfficerOrAdmin]
     serializer_class = PaymentSerializer
 
     def get_queryset(self):

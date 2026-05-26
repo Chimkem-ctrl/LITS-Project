@@ -1,10 +1,32 @@
+import { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { ProtectedLayout } from "../components/common/Layout";
 import { Card, CardBody, CardTitle } from "../components/ui/Card";
+import { api } from "../api/axios";
 import "../styles/dashboard.css";
 
 export default function DashboardPage() {
   const { user } = useAuth();
+  const [stats, setStats] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    async function loadStats() {
+      try {
+        const response = await api.get("/loans/dashboard_stats/");
+        setStats(response.data);
+      } catch (err) {
+        setError(
+          err?.response?.data?.detail ||
+            "Unable to load dashboard statistics right now."
+        );
+      } finally {
+        setLoading(false);
+      }
+    }
+    loadStats();
+  }, []);
 
   return (
     <ProtectedLayout>
@@ -14,52 +36,77 @@ export default function DashboardPage() {
           <p>Welcome back, {user?.first_name}!</p>
         </div>
 
-        <div className="stats-grid">
-          {STATS.map((stat) => (
-            <Card key={stat.id} className="stat-card">
-              <CardBody className="stat-card-body">
-                <div className="stat-icon">{stat.icon}</div>
-                <div className="stat-content">
-                  <p className="stat-label">{stat.label}</p>
-                  <h3 className="stat-value">{stat.value}</h3>
-                </div>
-              </CardBody>
-            </Card>
-          ))}
-        </div>
+        {loading ? (
+          <div className="center-screen">
+            <p>Loading dashboard metrics…</p>
+          </div>
+        ) : error ? (
+          <div className="center-screen">
+            <p className="form-error">{error}</p>
+          </div>
+        ) : (
+          <>
+            <div className="stats-grid">
+              {STATS.map((stat, index) => {
+                const value =
+                  stats && index === 0
+                    ? stats.total_loans
+                    : stats && index === 1
+                    ? `₱${Number(stats.total_disbursed || 0).toLocaleString()}`
+                    : stats && index === 2
+                    ? stats.paid_loans
+                    : stats && index === 3
+                    ? stats.active_loans
+                    : stat.value;
 
-        <div className="dashboard-grid">
-          <Card className="dashboard-card">
-            <CardTitle>Recent Activity</CardTitle>
-            <CardBody>
-              <div className="activity-list">
-                {ACTIVITIES.map((activity) => (
-                  <div key={activity.id} className="activity-item">
-                    <div className="activity-icon">{activity.icon}</div>
-                    <div className="activity-content">
-                      <p className="activity-title">{activity.title}</p>
-                      <p className="activity-time">{activity.time}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </CardBody>
-          </Card>
+                return (
+                  <Card key={stat.id} className="stat-card">
+                    <CardBody className="stat-card-body">
+                      <div className="stat-icon">{stat.icon}</div>
+                      <div className="stat-content">
+                        <p className="stat-label">{stat.label}</p>
+                        <h3 className="stat-value">{value}</h3>
+                      </div>
+                    </CardBody>
+                  </Card>
+                );
+              })}
+            </div>
 
-          <Card className="dashboard-card">
-            <CardTitle>Quick Stats</CardTitle>
-            <CardBody>
-              <div className="quick-stats">
-                {QUICK_STATS.map((s) => (
-                  <div key={s.id} className="quick-stat">
-                    <span className="quick-stat-label">{s.label}</span>
-                    <span className="quick-stat-value">{s.value}</span>
+            <div className="dashboard-grid">
+              <Card className="dashboard-card">
+                <CardTitle>Recent Activity</CardTitle>
+                <CardBody>
+                  <div className="activity-list">
+                    {ACTIVITIES.map((activity) => (
+                      <div key={activity.id} className="activity-item">
+                        <div className="activity-icon">{activity.icon}</div>
+                        <div className="activity-content">
+                          <p className="activity-title">{activity.title}</p>
+                          <p className="activity-time">{activity.time}</p>
+                        </div>
+                      </div>
+                    ))}
                   </div>
-                ))}
-              </div>
-            </CardBody>
-          </Card>
-        </div>
+                </CardBody>
+              </Card>
+
+              <Card className="dashboard-card">
+                <CardTitle>Quick Stats</CardTitle>
+                <CardBody>
+                  <div className="quick-stats">
+                    {QUICK_STATS.map((s) => (
+                      <div key={s.id} className="quick-stat">
+                        <span className="quick-stat-label">{s.label}</span>
+                        <span className="quick-stat-value">{s.value}</span>
+                      </div>
+                    ))}
+                  </div>
+                </CardBody>
+              </Card>
+            </div>
+          </>
+        )}
       </div>
     </ProtectedLayout>
   );

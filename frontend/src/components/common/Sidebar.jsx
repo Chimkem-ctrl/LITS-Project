@@ -6,6 +6,7 @@ import "./Sidebar.css";
 const SIDEBAR_LINKS = [
   { label: "Dashboard", path: "/dashboard", icon: "📊" },
   { label: "Profile", path: "/profile", icon: "👤" },
+  { label: "Chatbot", path: "/chat", icon: "🤖" },
   { label: "Admin Panel", path: "/admin", icon: "⚙️" },
   { label: "Settings", path: "/settings", icon: "🔧" },
 ];
@@ -13,7 +14,7 @@ const SIDEBAR_LINKS = [
 export function Sidebar() {
   const [collapsed, setCollapsed] = useState(false);
   const location = useLocation();
-  const { logout } = useAuth();
+  const { logout, user } = useAuth();
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -36,7 +37,12 @@ export function Sidebar() {
       </div>
 
       <nav className="sidebar-nav">
-        {SIDEBAR_LINKS.map((link) => (
+        {SIDEBAR_LINKS.filter((link) => {
+            if (link.path === "/admin" && user?.role !== "admin") {
+              return false;
+            }
+            return true;
+          }).map((link) => (
           <Link
             key={link.path}
             to={link.path}
@@ -50,7 +56,7 @@ export function Sidebar() {
             <span className="sidebar-link-icon">{link.icon}</span>
             {!collapsed && <span>{link.label}</span>}
           </Link>
-        ))}
+          ))}
       </nav>
 
       <button className="sidebar-logout" onClick={handleLogout}>

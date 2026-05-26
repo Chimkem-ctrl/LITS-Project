@@ -1,6 +1,5 @@
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
 from django.db import models
-from cloudinary_storage.storage import MediaCloudinaryStorage
 
 
 class CustomUserManager(BaseUserManager):
@@ -37,7 +36,6 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     role = models.CharField(max_length=20, choices=ROLE_CHOICES, default="officer")
     profile_picture = models.ImageField(
         upload_to=avatar_upload_path,
-        storage=MediaCloudinaryStorage(),
         blank=True,
         null=True,
     )
