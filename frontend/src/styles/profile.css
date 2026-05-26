@@ -1,3 +1,4 @@
+/* Profile page styles */
 .profile-container {
   padding: var(--space-8) 0;
 }
@@ -23,15 +24,15 @@
 }
 
 .profile-avatar {
-  width: 120px;
-  height: 120px;
+  width: clamp(80px, 16vw, 140px);
+  height: clamp(80px, 16vw, 140px);
   border-radius: 50%;
   background: linear-gradient(135deg, var(--primary-500), var(--accent-500));
   display: flex;
   align-items: center;
   justify-content: center;
   color: white;
-  font-size: 3rem;
+  font-size: clamp(1.5rem, 3vw, 3rem);
   font-weight: var(--weight-bold);
   overflow: hidden;
   flex-shrink: 0;
@@ -41,6 +42,22 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+  display: block;
+}
+
+/* small avatar used in details */
+.avatar-small {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+  display: inline-block;
+}
+
+/* make file input full width on small screens */
+.input[type="file"],
+.input[type=file] {
+  padding: var(--space-2) var(--space-3);
 }
 
 .profile-details {
@@ -48,33 +65,35 @@
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: var(--space-4);
+  align-items: center;
 }
 
-.profile-field {
+.detail-item {
   display: flex;
   flex-direction: column;
 }
 
-.profile-field label {
-  font-size: var(--text-sm);
+.detail-label {
+  font-size: var(--text-xs);
   color: var(--text-secondary);
   text-transform: uppercase;
-  letter-spacing: 0.05em;
-  margin-bottom: var(--space-1);
+  letter-spacing: 0.04em;
+  margin-bottom: 0.25rem;
   font-weight: var(--weight-semibold);
 }
 
-.profile-field p {
+.detail-value {
   margin: 0;
   color: var(--text-primary);
-  font-size: var(--text-base);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
 }
 
 .role-badge {
   display: inline-block;
-  background: rgba(34, 197, 94, 0.2);
-  color: var(--primary-500);
-  padding: var(--space-1) var(--space-3);
+  background: rgba(34, 197, 94, 0.12);
+  color: var(--primary-400);
+  padding: 0.25rem 0.5rem;
   border-radius: var(--radius-full);
   font-size: var(--text-sm);
   font-weight: var(--weight-semibold);

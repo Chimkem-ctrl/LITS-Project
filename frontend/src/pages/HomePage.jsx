@@ -11,7 +11,7 @@ export default function HomePage() {
         <div className="home-hero">
           <h1 className="home-title">Welcome to LITS</h1>
           <p className="home-subtitle">
-            Loan Information & Transaction System
+            Loan & Installment Tracking System  
           </p>
           <p className="home-description">
             Manage loans, payments, and borrower information efficiently with our modern platform.

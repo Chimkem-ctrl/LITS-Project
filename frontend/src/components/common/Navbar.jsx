@@ -1,5 +1,12 @@
+
 import { useAuth } from "../../context/AuthContext";
 import "./Navbar.css";
+
+function getFullImageUrl(url) {
+  if (!url) return null;
+  if (url.startsWith('http://') || url.startsWith('https://')) return url;
+  return `http://localhost:8000${url}`;
+}
 
 export function Navbar() {
   const { user } = useAuth();
@@ -12,7 +19,12 @@ export function Navbar() {
         <div className="navbar-user">
           <div className="navbar-avatar">
             {user?.profile_picture_url ? (
-              <img src={user.profile_picture_url} alt={user?.email} />
+              <img
+                src={getFullImageUrl(user.profile_picture_url)}
+                alt={user?.email}
+                style={{ objectFit: 'cover', objectPosition: 'center' }}
+                onError={e => { e.target.onerror = null; e.target.src = '/default-avatar.png'; }}
+              />
             ) : (
               <span>{user?.email?.charAt(0).toUpperCase()}</span>
             )}

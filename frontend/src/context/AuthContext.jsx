@@ -36,6 +36,20 @@ export function AuthProvider({ children }) {
     await api.post("/auth/users/", body);
   }
 
+  async function updateProfile(data) {
+    const formData = new FormData();
+    Object.entries(data).forEach(([key, value]) => {
+      if (value !== undefined && value !== null) {
+        formData.append(key, value);
+      }
+    });
+
+    const response = await api.patch("/users/me/", formData);
+
+    setUser(response.data);
+    return response.data;
+  }
+
   function logout() {
     clearTokens();
     setTokensState(null);
@@ -72,6 +86,7 @@ export function AuthProvider({ children }) {
       isAuthenticated,
       login,
       register,
+      updateProfile,
       logout,
     }),
     [user, tokens, authLoading, isAuthenticated]

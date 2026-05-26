@@ -5,9 +5,6 @@ const TOKEN_KEY = "lits_tokens";
 
 const api = axios.create({
   baseURL: API_BASE_URL,
-  headers: {
-    "Content-Type": "application/json",
-  },
 });
 
 function getTokens() {
@@ -35,6 +32,20 @@ api.interceptors.request.use((config) => {
   if (tokens?.access) {
     config.headers.Authorization = `Bearer ${tokens.access}`;
   }
+
+  if (config.data instanceof FormData) {
+    // Let browser set the proper multipart boundary header.
+    config.headers = {
+      ...config.headers,
+    };
+    delete config.headers["Content-Type"];
+  } else {
+    config.headers = {
+      "Content-Type": "application/json",
+      ...config.headers,
+    };
+  }
+
   return config;
 });
 
