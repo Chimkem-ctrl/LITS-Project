@@ -47,6 +47,54 @@ class LoanViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(created_by=self.request.user)
 
+    @action(detail=False, methods=['post'], permission_classes=[IsAuthenticated])
+    def apply(self, request):
+        """Endpoint for borrowers to submit loan applications. If a Borrower record
+        matching the user's email does not exist, one will be created automatically.
+        Officers and admins may still create loans through the standard create.
+        """
+        user = request.user
+        data = request.data.copy()
+
+        # Only allow borrowers (and staff) to use this simplified apply flow
+        if getattr(user, 'role', None) not in {None, 'borrower', 'officer', 'admin'} and not user.is_staff:
+            return Response({'detail': 'Not allowed to apply for loans.'}, status=403)
+
+        # Ensure borrower record exists for this user by email
+        borrower_email = data.get('borrower_email') or getattr(user, 'email', None)
+        borrower = None
+        if borrower_email:
+            borrower_qs = Borrower.objects.filter(email=borrower_email)
+            if borrower_qs.exists():
+                borrower = borrower_qs.first()
+            else:
+                borrower = Borrower.objects.create(
+                    created_by=user if getattr(user, 'role', None) in {'officer', 'admin'} else None,
+                    first_name=data.get('first_name') or getattr(user, 'first_name', ''),
+                    last_name=data.get('last_name') or getattr(user, 'last_name', ''),
+                    email=borrower_email,
+                    phone=data.get('phone', ''),
+                    address=data.get('address', ''),
+                )
+        else:
+            return Response({'detail': 'Borrower email is required.'}, status=400)
+
+        # Build loan payload
+        loan_payload = {
+            'borrower': borrower.id,
+            'principal_amount': data.get('principal_amount'),
+            'interest_rate': data.get('interest_rate', 0),
+            'payment_term': data.get('payment_term', 'monthly'),
+            'start_date': data.get('start_date'),
+            'maturity_date': data.get('maturity_date'),
+            'notes': data.get('notes', f"Applied via mobile/web by {user.email}"),
+        }
+
+        serializer = self.get_serializer(data=loan_payload)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        return Response(serializer.data, status=201)
+
     @action(detail=False, methods=['get'], permission_classes=[IsAuthenticated])
     def dashboard_stats(self, request):
         # Allow any authenticated user to access this endpoint, but scope the
@@ -86,7 +134,8 @@ class LoanViewSet(viewsets.ModelViewSet):
 
 
 class PaymentViewSet(viewsets.ModelViewSet):
-    permission_classes = [IsAuthenticated, IsOfficerOrAdmin]
+    # Allow any authenticated user to list/pay, but enforce ownership for borrowers
+    permission_classes = [IsAuthenticated]
     serializer_class = PaymentSerializer
 
     def get_queryset(self):
@@ -97,13 +146,23 @@ class PaymentViewSet(viewsets.ModelViewSet):
         return qs
 
     def perform_create(self, serializer):
+        # Ownership and overpayment checks are handled in serializer and model.
+        loan = serializer.validated_data.get('loan')
+        user = self.request.user
+
+        # If user is borrower, ensure loan belongs to one of their borrower records
+        if getattr(user, 'role', None) == 'borrower':
+            borrowers = Borrower.objects.filter(email=user.email)
+            if not borrowers.exists() or loan.borrower not in borrowers:
+                raise ValueError('You may only record payments for your own loans.')
+
         try:
             serializer.save(recorded_by=self.request.user)
             # Update loan status
             loan = serializer.instance.loan
             loan.save()
         except ValueError as e:
-            return Response({'detail': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+            raise
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)

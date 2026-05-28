@@ -9,12 +9,13 @@ export default function HomePage() {
     <AuthLayout>
       <div className="home-container">
         <div className="home-hero">
-          <h1 className="home-title">Welcome to LITS</h1>
+          <div className="hero-badge">Minimal finance platform</div>
+          <h1 className="home-title">A calm, precise loan experience.</h1>
           <p className="home-subtitle">
-            Loan & Installment Tracking System  
+            The modern system for borrower tracking, payment clarity, and secure workflows.
           </p>
           <p className="home-description">
-            Manage loans, payments, and borrower information efficiently with our modern platform.
+            Designed for people who want a quiet, elegant interface that keeps the numbers in view and the process under control.
           </p>
 
           <div className="home-actions">

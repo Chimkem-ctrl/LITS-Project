@@ -1,0 +1,11 @@
+{
+  "expo": {
+    "name": "LITS Mobile",
+    "slug": "lits-mobile",
+    "platforms": ["ios", "android", "web"],
+    "sdkVersion": "54.0.0",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "entryPoint": "node_modules/expo/AppEntry.js"
+  }
+}

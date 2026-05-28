@@ -1,11 +1,13 @@
 
 from django.contrib import admin
 from django.urls import path, include
+from django.http import JsonResponse
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
+    path('', lambda request: JsonResponse({'status': 'ok', 'message': 'LITS backend running'})),
     path('admin/', admin.site.urls),
     
 

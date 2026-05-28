@@ -4,54 +4,53 @@
 
 :root {
   /* === Color Palette === */
-  /* Primary (Emerald Green - trust, growth, finance) */
-  --primary-50: #f0fdf4;
-  --primary-100: #dcfce7;
-  --primary-200: #bbf7d0;
-  --primary-300: #86efac;
-  --primary-400: #4ade80;
-  --primary-500: #22c55e;
-  --primary-600: #16a34a;
-  --primary-700: #15803d;
-  --primary-800: #166534;
-  --primary-900: #145231;
+  /* Primary (Dark Emerald) */
+  --primary-50: #e9f7ed;
+  --primary-100: #d2efdd;
+  --primary-200: #a7dfb9;
+  --primary-300: #7abf8a;
+  --primary-400: #4a9e5f;
+  --primary-500: #247945;
+  --primary-600: #1f6b3d;
+  --primary-700: #1c5f35;
+  --primary-800: #183f28;
+  --primary-900: #122819;
 
-  /* Accent (Teal - complementary) */
-  --accent-50: #f0fdfa;
-  --accent-100: #ccfbf1;
-  --accent-200: #99f6e4;
-  --accent-300: #5eead4;
-  --accent-400: #2dd4bf;
-  --accent-500: #14b8a6;
-  --accent-600: #0d9488;
-  --accent-700: #0f766e;
-  --accent-800: #134e4a;
-  --accent-900: #0f2f2e;
+  /* Accent (Soft Teal) */
+  --accent-50: #e9f8f3;
+  --accent-100: #d1f1e7;
+  --accent-200: #a8e4d2;
+  --accent-300: #79d5bc;
+  --accent-400: #44c3a1;
+  --accent-500: #1ba27f;
+  --accent-600: #168967;
+  --accent-700: #126b52;
+  --accent-800: #0f4a3e;
+  --accent-900: #0a2d27;
 
-  /* Neutral (Grays - dark theme) */
-  --neutral-50: #f9fafb;
-  --neutral-100: #f3f4f6;
-  --neutral-200: #e5e7eb;
-  --neutral-300: #d1d5db;
-  --neutral-400: #9ca3af;
-  --neutral-500: #6b7280;
-  --neutral-600: #4b5563;
-  --neutral-700: #374151;
-  --neutral-800: #1f2937;
-  --neutral-900: #0f1419;
-  --neutral-950: #030712;
+  /* Neutral (Dark Minimal) */
+  --neutral-50: #f4f7f2;
+  --neutral-100: #e4e9e5;
+  --neutral-200: #cbd3cb;
+  --neutral-300: #aab2a8;
+  --neutral-400: #7f8a80;
+  --neutral-500: #5f6b61;
+  --neutral-600: #47514a;
+  --neutral-700: #363e37;
+  --neutral-800: #232a24;
+  --neutral-900: #121710;
 
   /* Dark Mode Colors */
-  --dark-bg: #0f1419;
-  --dark-surface: #1a1f2e;
-  --dark-surface-alt: #232d3f;
-  --dark-border: #2d3748;
-  --dark-text: #f3f4f6;
-  --dark-text-muted: #9ca3af;
-  --dark-text-secondary: #d1d5db;
+  --dark-bg: #08110d;
+  --dark-surface: #101e16;
+  --dark-surface-alt: #17291f;
+  --dark-border: rgba(255, 255, 255, 0.06);
+  --dark-text: #eff5eb;
+  --dark-text-muted: #a8b7a2;
+  --dark-text-secondary: #8da08c;
 
   /* Status Colors */
-  --success-500: #22c55e;
+  --success-500: #24a35b;
   --warning-500: #f59e0b;
   --error-500: #ef4444;
   --info-500: #3b82f6;
@@ -66,17 +65,17 @@
   --border-color: var(--dark-border);
 
   /* === Typography === */
-  --font-family: "Inter", "Segoe UI", -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-family: "Inter", "Space Grotesk", "Segoe UI", -apple-system, BlinkMacSystemFont, sans-serif;
   --font-mono: "Fira Code", "Courier New", monospace;
 
   --text-xs: 0.75rem;
   --text-sm: 0.875rem;
   --text-base: 1rem;
-  --text-lg: 1.125rem;
+  --text-lg: 1.1rem;
   --text-xl: 1.25rem;
   --text-2xl: 1.5rem;
-  --text-3xl: 1.875rem;
-  --text-4xl: 2.25rem;
+  --text-3xl: 2rem;
+  --text-4xl: 2.75rem;
 
   --weight-light: 300;
   --weight-normal: 400;
@@ -110,16 +109,16 @@
   --radius-full: 9999px;
 
   /* === Shadows === */
-  --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
-  --shadow-base: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-  --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-  --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
-  --shadow-xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-sm: 0 2px 6px rgba(0, 0, 0, 0.08);
+  --shadow-base: 0 8px 24px rgba(0, 0, 0, 0.12);
+  --shadow-md: 0 12px 32px rgba(0, 0, 0, 0.16);
+  --shadow-lg: 0 24px 60px rgba(0, 0, 0, 0.22);
+  --shadow-xl: 0 32px 90px rgba(0, 0, 0, 0.24);
 
   /* === Transitions === */
   --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
-  --transition-base: 200ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-base: 220ms cubic-bezier(0.4, 0, 0.2, 1);
   --transition-slow: 300ms cubic-bezier(0.4, 0, 0.2, 1);
 
   /* === Z-index === */
@@ -132,15 +131,14 @@
   --z-toast: 1070;
 }
 
-/* Light mode alternative (optional, currently dark-first) */
 @media (prefers-color-scheme: light) {
   :root {
     --bg-primary: #ffffff;
-    --bg-secondary: #f9fafb;
-    --bg-tertiary: #f3f4f6;
-    --text-primary: #0f1419;
-    --text-secondary: #6b7280;
-    --text-tertiary: #4b5563;
-    --border-color: #e5e7eb;
+    --bg-secondary: #f6f9f3;
+    --bg-tertiary: #eef2eb;
+    --text-primary: #0f1d14;
+    --text-secondary: #5f6b5a;
+    --text-tertiary: #7a8a7a;
+    --border-color: #dce3d8;
   }
 }
