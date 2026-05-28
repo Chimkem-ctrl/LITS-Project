@@ -7,6 +7,7 @@ import DashboardPage from "./pages/DashboardPage";
 import ProfilePage from "./pages/ProfilePage";
 import ChatPage from "./pages/ChatPage";
 import SettingsPage from "./pages/SettingsPage";
+import ChatAssistantPage from "./pages/ChatAssistantPage";
 import AdminPage from "./pages/AdminPage";
 import NotFoundPage from "./pages/NotFoundPage";
 import ProtectedRoute from "./routes/ProtectedRoute";
@@ -39,6 +40,14 @@ export default function App() {
       />
       <Route path="/activate/:uid/:token" element={<ActivateAccountPage />} />
       <Route
+        path="/activate/:uid/:token"
+        element={
+          <PublicOnlyRoute>
+            <ActivateAccountPage />
+          </PublicOnlyRoute>
+        }
+      />
+      <Route
         path="/dashboard"
         element={
           <ProtectedRoute>
@@ -67,6 +76,14 @@ export default function App() {
         element={
           <ProtectedRoute>
             <SettingsPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/chat"
+        element={
+          <ProtectedRoute>
+            <ChatAssistantPage />
           </ProtectedRoute>
         }
       />

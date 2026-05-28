@@ -4,11 +4,16 @@ import { useAuth } from "../../context/AuthContext";
 import "./Sidebar.css";
 
 const SIDEBAR_LINKS = [
-  { label: "Dashboard", path: "/dashboard", icon: "📊" },
-  { label: "Profile", path: "/profile", icon: "👤" },
-  { label: "Chatbot", path: "/chat", icon: "🤖" },
-  { label: "Admin Panel", path: "/admin", icon: "⚙️" },
-  { label: "Settings", path: "/settings", icon: "🔧" },
+  { label: "Dashboard", path: "/dashboard", icon: "📊", roles: ["admin", "officer", "borrower"] },
+  { label: "Admin Overview", path: "/admin", icon: "🧭", roles: ["admin", "officer"] },
+  { label: "Borrowers", path: "/admin/borrowers", icon: "👥", roles: ["admin", "officer"] },
+  { label: "Loans", path: "/admin/loans", icon: "💼", roles: ["admin", "officer"] },
+  { label: "Payments", path: "/admin/payments", icon: "💳", roles: ["admin", "officer"] },
+  { label: "Reports", path: "/admin/reports", icon: "📈", roles: ["admin", "officer"] },
+  { label: "My Loans", path: "/borrower/loans", icon: "📄", roles: ["borrower"] },
+  { label: "Profile", path: "/profile", icon: "👤", roles: ["admin", "officer", "borrower"] },
+  { label: "Settings", path: "/settings", icon: "🔧", roles: ["admin", "officer", "borrower"] },
+  { label: "AI Chat", path: "/chat", icon: "🤖", roles: ["admin", "officer", "borrower"] },
 ];
 
 export function Sidebar() {
@@ -16,10 +21,24 @@ export function Sidebar() {
   const location = useLocation();
   const { logout, user } = useAuth();
   const navigate = useNavigate();
+  const visibleLinks = SIDEBAR_LINKS.filter((link) => link.roles.includes(user?.role));
 
   const handleLogout = () => {
     logout();
     navigate("/login");
+  };
+
+  const isActiveLink = (path) => {
+    if (path === "/") {
+      return location.pathname === "/";
+    }
+
+    // Special handling for borrower loan details
+    if (path === "/borrower/loans") {
+      return location.pathname === path || location.pathname.startsWith(`/borrower/loan/`);
+    }
+
+    return location.pathname === path || location.pathname.startsWith(`${path}/`);
   };
 
   return (
@@ -37,26 +56,17 @@ export function Sidebar() {
       </div>
 
       <nav className="sidebar-nav">
-        {SIDEBAR_LINKS.filter((link) => {
-            if (link.path === "/admin" && user?.role !== "admin") {
-              return false;
-            }
-            return true;
-          }).map((link) => (
+        {visibleLinks.map((link) => (
           <Link
             key={link.path}
             to={link.path}
-            className={`sidebar-link ${
-              location.pathname.startsWith(link.path.split("/")[1])
-                ? "sidebar-link-active"
-                : ""
-            }`}
+            className={`sidebar-link ${isActiveLink(link.path) ? "sidebar-link-active" : ""}`}
             title={collapsed ? link.label : ""}
           >
             <span className="sidebar-link-icon">{link.icon}</span>
             {!collapsed && <span>{link.label}</span>}
           </Link>
-          ))}
+        ))}
       </nav>
 
       <button className="sidebar-logout" onClick={handleLogout}>

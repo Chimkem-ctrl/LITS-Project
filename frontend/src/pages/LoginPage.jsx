@@ -46,9 +46,11 @@ export default function LoginPage() {
       toast.success("Welcome back!");
       navigate(from, { replace: true });
     } catch (err) {
+      const rawMessage = err?.response?.data?.detail || "";
       const message =
-        err?.response?.data?.detail ||
-        "Login failed. Check your credentials and try again.";
+        typeof rawMessage === "string" && rawMessage.toLowerCase().includes("no active account")
+          ? "Account is not activated yet. Please verify your email first."
+          : rawMessage || "Login failed. Check your credentials and try again.";
       toast.error(message);
       setErrors({ form: message });
     } finally {

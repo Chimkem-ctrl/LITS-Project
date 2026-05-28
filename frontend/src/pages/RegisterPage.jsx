@@ -2,22 +2,30 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { Input } from "../components/forms/Input";
+import { Select } from "../components/forms/Input";
 import { Button } from "../components/ui/Button";
 import { Card } from "../components/ui/Card";
 import { AuthLayout } from "../components/common/Layout";
 import { toast } from "../components/ui/Toast";
 import "../styles/auth.css";
 
+const ROLE_OPTIONS = [
+  { value: "borrower", label: "Borrower" },
+  { value: "officer", label: "Lending Officer" },
+  { value: "admin", label: "Admin" },
+];
+
 const defaultForm = {
   email: "",
   firstName: "",
   lastName: "",
+  role: "borrower",
   password: "",
   confirmPassword: "",
 };
 
 export default function RegisterPage() {
-  const { register, login } = useAuth();
+  const { register } = useAuth();
   const navigate = useNavigate();
 
   const [form, setForm] = useState(defaultForm);
@@ -55,16 +63,8 @@ export default function RegisterPage() {
     setLoading(true);
 
     try {
-      await register({
-        email: form.email,
-        firstName: form.firstName,
-        lastName: form.lastName,
-        password: form.password,
-        confirmPassword: form.confirmPassword,
-      });
-      toast.success(
-        "Registration successful! Please check your email and activate your account before logging in."
-      );
+      await register(form);
+      toast.success("Account created. Check your email to activate your account.");
       navigate("/login", { replace: true });
     } catch (err) {
       const data = err?.response?.data;
@@ -120,6 +120,15 @@ export default function RegisterPage() {
             onChange={onChange}
             error={errors.email}
             required
+          />
+
+          <Select
+            id="role"
+            name="role"
+            label="Role"
+            value={form.role}
+            onChange={onChange}
+            options={ROLE_OPTIONS}
           />
 
           <Input

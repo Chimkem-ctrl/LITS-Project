@@ -16,6 +16,16 @@ export function AuthProvider({ children }) {
     return response.data;
   }
 
+  async function updateProfile(payload) {
+    const response = await api.patch("/users/me/", payload);
+    setUser(response.data);
+    return response.data;
+  }
+
+  async function changePassword(payload) {
+    await api.post("/auth/users/set_password/", payload);
+  }
+
   async function login(email, password) {
     const response = await api.post("/auth/jwt/create/", { email, password });
     setTokens(response.data);
@@ -36,18 +46,8 @@ export function AuthProvider({ children }) {
     await api.post("/auth/users/", body);
   }
 
-  async function updateProfile(data) {
-    const formData = new FormData();
-    Object.entries(data).forEach(([key, value]) => {
-      if (value !== undefined && value !== null) {
-        formData.append(key, value);
-      }
-    });
-
-    const response = await api.patch("/users/me/", formData);
-
-    setUser(response.data);
-    return response.data;
+  async function activateAccount(uid, token) {
+    await api.post("/auth/users/activation/", { uid, token });
   }
 
   function logout() {
@@ -86,7 +86,10 @@ export function AuthProvider({ children }) {
       isAuthenticated,
       login,
       register,
+      activateAccount,
+      fetchMe,
       updateProfile,
+      changePassword,
       logout,
     }),
     [user, tokens, authLoading, isAuthenticated]

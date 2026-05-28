@@ -1,4 +1,7 @@
-from djoser.serializers import UserCreateSerializer as BaseUserCreateSerializer
+from djoser.serializers import (
+    UserCreatePasswordRetypeSerializer as BaseUserCreatePasswordRetypeSerializer,
+    UserCreateSerializer as BaseUserCreateSerializer,
+)
 from rest_framework import serializers
 from .models import CustomUser
 
@@ -10,13 +13,19 @@ class UserCreateSerializer(BaseUserCreateSerializer):
         model = CustomUser
         fields = (
             "id", "email", "first_name", "last_name",
-            "password", "re_password", "profile_picture",
+            "password", "role", "profile_picture",
         )
 
-    def create(self, validated_data):
-        # Public registration should always create borrower accounts.
-        validated_data["role"] = "borrower"
-        return super().create(validated_data)
+
+class UserCreatePasswordRetypeSerializer(BaseUserCreatePasswordRetypeSerializer):
+    """Registration serializer with password retype support and explicit role field."""
+
+    class Meta(BaseUserCreatePasswordRetypeSerializer.Meta):
+        model = CustomUser
+        fields = (
+            "id", "email", "first_name", "last_name",
+            "password", "role", "profile_picture",
+        )
 
 
 class UserSerializer(serializers.ModelSerializer):

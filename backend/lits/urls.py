@@ -1,9 +1,6 @@
-
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
-from django.conf import settings
-from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -16,8 +13,8 @@ urlpatterns = [
     # Djoser: registration, activation, password reset
     path('api/v1/auth/', include('djoser.urls')),
 
-    # Chatbot endpoint
-    path('api/v1/chat/', include('chatbot.urls')),
+    # Ollama assistant chat
+    path('api/v1/assistant/', include('assistant.urls')),
 
     # Loans app: borrowers, loans, payments
     path('api/v1/', include('loans.urls')),
@@ -25,7 +22,3 @@ urlpatterns = [
     # Users app: /me/ endpoint
     path('api/v1/users/', include('users.urls')),
 ]
-
-# Serve media files in development
-if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

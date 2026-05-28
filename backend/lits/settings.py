@@ -7,9 +7,11 @@ apply_runtime_patches()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = config('SECRET_KEY', default='django-insecure-default-secret-key')
+SECRET_KEY = config('SECRET_KEY')
 DEBUG = config('DEBUG', default=True, cast=bool)
 ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='localhost,127.0.0.1').split(',')
+if DEBUG:
+    ALLOWED_HOSTS = ['*']  # Allow all hosts in development (LAN + tunnel)
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -24,7 +26,6 @@ INSTALLED_APPS = [
     'djoser',
     'cloudinary',
     'cloudinary_storage',
-    'chatbot',
     'users',
     'loans',
 ]
@@ -103,13 +104,7 @@ CLOUDINARY_STORAGE = {
     'API_KEY':    config('CLOUDINARY_API_KEY',    default=''),
     'API_SECRET': config('CLOUDINARY_API_SECRET', default=''),
 }
-
-if CLOUDINARY_STORAGE['CLOUD_NAME'] and CLOUDINARY_STORAGE['API_KEY'] and CLOUDINARY_STORAGE['API_SECRET']:
-    DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
-else:
-    DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
-    MEDIA_ROOT = BASE_DIR / 'media'
-
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 MEDIA_URL = '/media/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
@@ -132,18 +127,20 @@ SIMPLE_JWT = {
     'ROTATE_REFRESH_TOKENS':  True,
 }
 
-FRONTEND_DOMAIN = config('FRONTEND_DOMAIN', default='localhost:5173')
-
 DJOSER = {
     'LOGIN_FIELD': 'email',
-    'USER_ID_FIELD': 'email',
+    'USER_ID_FIELD': 'email', # Add this line
     'USER_CREATE_PASSWORD_RETYPE': True,
     'SEND_ACTIVATION_EMAIL': True,
     'ACTIVATION_URL': 'activate/{uid}/{token}',
     'SERIALIZERS': {
         'user_create': 'users.serializers.UserCreateSerializer',
-        'user': 'users.serializers.UserSerializer',
+        'user_create_password_retype': 'users.serializers.UserCreatePasswordRetypeSerializer',
+        'user': 'users.serializers.UserSerializer', # Use 'user' instead of 'current_user'
         'current_user': 'users.serializers.UserSerializer',
+    },
+    'EMAIL': {
+        'activation': 'users.email.CustomActivationEmail',
     },
 }
 
@@ -163,5 +160,9 @@ EMAIL_HOST_USER     = config('EMAIL_HOST_USER',     default='')
 EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='')
 DEFAULT_FROM_EMAIL  = config('DEFAULT_FROM_EMAIL',  default='noreply@lits.com')
 
-DOMAIN = FRONTEND_DOMAIN
+OLLAMA_BASE_URL = config('OLLAMA_BASE_URL', default='http://127.0.0.1:11434')
+OLLAMA_MODEL = config('OLLAMA_MODEL', default='qwen2.5:0.5b')
+OLLAMA_TIMEOUT_SECONDS = config('OLLAMA_TIMEOUT_SECONDS', default=60, cast=int)
+
+DOMAIN    = config('FRONTEND_DOMAIN', default='localhost:3000')
 SITE_NAME = 'LITS'
