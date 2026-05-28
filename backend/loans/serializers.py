@@ -18,6 +18,7 @@ class BorrowerSerializer(serializers.ModelSerializer):
 
 class PaymentSerializer(serializers.ModelSerializer):
     recorded_by_name = serializers.SerializerMethodField()
+    loan_borrower_name = serializers.SerializerMethodField()
 
     class Meta:
         model = Payment
@@ -27,6 +28,11 @@ class PaymentSerializer(serializers.ModelSerializer):
     def get_recorded_by_name(self, obj):
         if obj.recorded_by:
             return obj.recorded_by.full_name
+        return None
+
+    def get_loan_borrower_name(self, obj):
+        if obj.loan and obj.loan.borrower:
+            return obj.loan.borrower.full_name
         return None
 
     def validate_amount_paid(self, value):
